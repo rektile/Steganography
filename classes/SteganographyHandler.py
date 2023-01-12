@@ -3,9 +3,11 @@ from PIL import Image
 
 class SteganographyHandler:
 
-    def __init__(self):
+    def __init__(self, _imageName, _secretMessage):
 
         self.endingMarker = "$;87"
+        self.imageName = _imageName
+        self.secretMessage = _secretMessage
 
     def stringToBinary(self, text):
         return "".join(format(ord(char), "08b") for char in str(text))
@@ -19,14 +21,21 @@ class SteganographyHandler:
 
         return data
 
+    def checkIfFits(self, imageArray, messageBits):
+        rows = len(imageArray)
+        columns = len(imageArray[0])
+        totalPixels = rows * columns
+        totalSpace = totalPixels * 3
+
+        return totalSpace >= messageBits
+
 
     def run(self):
 
+        imageArray = self.getPixelsFromImage(self.imageName)
 
+        secretWithMarker = self.secretMessage + self.endingMarker
 
-        binary = self.stringToBinary("text")
-        print(binary)
+        secretBits = self.stringToBinary(secretWithMarker)
 
-        text = self.binaryToString(binary)
-        print(text)
 
