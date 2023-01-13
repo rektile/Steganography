@@ -3,10 +3,11 @@ from PIL import Image
 
 class SteganographyHandler:
 
-    def __init__(self, _imageName, _secretMessage):
+    def __init__(self, _imageName, _newImageName, _secretMessage):
 
         self.endingMarker = "$;87"
         self.imageName = _imageName
+        self.newImageName = _newImageName
         self.secretMessage = _secretMessage
 
     def stringToBinary(self, text):
@@ -56,6 +57,9 @@ class SteganographyHandler:
             channel &= ~1
         return channel
 
+    def saveImageFromArray(self, imageArray, imageName):
+        img = Image.fromarray(imageArray)
+        img.save(imageName)
 
     def run(self):
 
@@ -67,5 +71,5 @@ class SteganographyHandler:
 
         modifiedImageArray = self.encode(imageArray, secretBits)
 
-
+        self.saveImageFromArray(modifiedImageArray, self.newImageName)
 
