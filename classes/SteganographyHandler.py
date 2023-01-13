@@ -3,12 +3,37 @@ from PIL import Image
 
 class SteganographyHandler:
 
-    def __init__(self, _imageName, _newImageName, _secretMessage):
+    def __init__(self):
 
         self.endingMarker = "$;87"
-        self.imageName = _imageName
-        self.newImageName = _newImageName
-        self.secretMessage = _secretMessage
+        self.inputPath = None
+        self.outputPath = None
+        self.secretMessage = None
+        self.encodeMode = None
+
+    def argumentParser(self, args):
+
+        if not args.encode and not args.decode:
+            print("[!] You need to select encode or decode mode.")
+            exit()
+
+        if not args.input:
+            print("[!] You need to specify an image you want to use.")
+            exit()
+
+        if args.encode and not args.output:
+            print("[!] You need to specify the output path.")
+            exit()
+
+        if args.encode and not args.secret:
+            print("[!] You need to specify your secret message.")
+            exit()
+
+        self.inputPath = args.input
+        self.outputPath = args.output
+        self.secretMessage = args.secret
+        self.encodeMode = args.encode
+
 
     def stringToBinary(self, text):
         return "".join(format(ord(char), "08b") for char in str(text))
@@ -48,7 +73,6 @@ class SteganographyHandler:
 
         return None
 
-
     def encode(self, imageArray, messageBits):
 
         messageIndex = 0
@@ -86,13 +110,21 @@ class SteganographyHandler:
 
     def run(self):
 
-        imageArray = self.getPixelsFromImage(self.imageName)
+        imageArray = self.getPixelsFromImage(self.inputPath)
 
-        secretWithMarker = self.secretMessage + self.endingMarker
+        if self.encodeMode:
+            print(f"[*] Encoding message \"{self.secretMessage}\" into image {self.inputPath}")
 
-        secretBits = self.stringToBinary(secretWithMarker)
+            secretWithMarker = self.secretMessage + self.endingMarker
 
-        modifiedImageArray = self.encode(imageArray, secretBits)
+            secretBits = self.stringToBinary(secretWithMarker)
 
-        self.saveImageFromArray(modifiedImageArray, self.newImageName)
-
+            modifiedImageArray = self.encode(imageArray, secretBits)
+            print(f"[*] Saving new image to {self.outputPath}")
+            self.saveImageFromArray(modifiedImageArray, self.outputPath)
+        else:
+            foundSecretMessage = self.decode(imageArray)
+            if foundSecretMessage:
+                print(f"[*] Secret message is: {foundSecretMessage}")
+            else:
+                print(f"[!] Couldn't find secret message.")
