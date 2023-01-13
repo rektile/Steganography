@@ -53,7 +53,7 @@ class SteganographyHandler:
         totalPixels = rows * columns
         totalSpace = totalPixels * 3
 
-        return totalSpace >= messageBits
+        return totalSpace >= len(messageBits)
 
     def decode(self, imageArray):
 
