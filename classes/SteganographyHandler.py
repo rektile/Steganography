@@ -29,6 +29,33 @@ class SteganographyHandler:
 
         return totalSpace >= messageBits
 
+    def encode(self, imageArray, messageBits):
+
+        messageIndex = 0
+
+        for rowIndex, row in enumerate(imageArray):
+
+            for pixelIndex, pixel in enumerate(row):
+
+                for channelIndex, channel in enumerate(pixel):
+
+                    if messageIndex < len(messageBits):
+                        currentMessageBit = messageBits[messageIndex]
+                        modifiedChannel = self.encodeInChannel(channel, currentMessageBit)
+                        messageIndex += 1
+                        imageArray[rowIndex][pixelIndex][channelIndex] = modifiedChannel
+                    else:
+                        return imageArray
+
+        return imageArray
+
+    def encodeInChannel(self, channel, bit):
+        if bit == "1":
+            channel |= 1
+        elif bit == "0":
+            channel &= ~1
+        return channel
+
 
     def run(self):
 
@@ -37,5 +64,8 @@ class SteganographyHandler:
         secretWithMarker = self.secretMessage + self.endingMarker
 
         secretBits = self.stringToBinary(secretWithMarker)
+
+        modifiedImageArray = self.encode(imageArray, secretBits)
+
 
 
