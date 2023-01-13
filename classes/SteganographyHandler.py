@@ -115,9 +115,14 @@ class SteganographyHandler:
         if self.encodeMode:
             print(f"[*] Encoding message \"{self.secretMessage}\" into image {self.inputPath}")
 
+
             secretWithMarker = self.secretMessage + self.endingMarker
 
             secretBits = self.stringToBinary(secretWithMarker)
+
+            if not self.checkIfFits(imageArray, secretBits):
+                print(f"[!] Not enough space inside the image.")
+                exit()
 
             modifiedImageArray = self.encode(imageArray, secretBits)
             print(f"[*] Saving new image to {self.outputPath}")
