@@ -20,10 +20,12 @@ pip install -r requirements.txt
 ## Usage
 Encoding example
 ```shell
-python Steganography.py -e -i image1.png -o image2.jpg -s "My secret message"
+python Steganography.py -e -i image1.jpg -o image2.png -s "My secret message"
 ```
+**Note:** Output needs to be PNG format
 
 Decoding example
 ```shell
 python Steganography.py -d -i image1.png
 ```
+**Note:** Input needs to be PNG format
