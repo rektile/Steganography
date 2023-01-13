@@ -128,6 +128,7 @@ class SteganographyHandler:
             print(f"[*] Saving new image to {self.outputPath}")
             self.saveImageFromArray(modifiedImageArray, self.outputPath)
         else:
+            print(f"[*] Decoding message from {self.inputPath}")
             foundSecretMessage = self.decode(imageArray)
             if foundSecretMessage:
                 print(f"[*] Secret message is: {foundSecretMessage}")
