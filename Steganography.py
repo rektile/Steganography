@@ -11,7 +11,7 @@ parser.add_argument("-e",
 
 parser.add_argument("-d",
                     "--decode",
-                    help="Decoding mode mode.",
+                    help="Decoding mode.",
                     action='store_true')
 
 parser.add_argument("-i",
